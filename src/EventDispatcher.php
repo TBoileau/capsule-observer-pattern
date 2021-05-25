@@ -4,22 +4,30 @@ declare(strict_types=1);
 
 namespace TBoileau\Observer;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
+
 class EventDispatcher implements EventDispatcherInterface
 {
-    /**
-     * @var array<string, array<array-key, EventListenerInterface>>
-     */
-    private array $listeners = [];
+    private ListenerProviderInterface $listenerProvider;
 
-    public function dispatch(string $eventName, ?EventInterface $event = null): void
+    public function __construct(ListenerProviderInterface $listenerProvider)
     {
-        foreach ($this->listeners[$eventName] as $listener) {
-            $listener->listen($event);
-        }
+        $this->listenerProvider = $listenerProvider;
     }
 
-    public function attach(string $eventName, EventListenerInterface $listener): void
+    public function dispatch(object $event): void
     {
-        $this->listeners[$eventName][] = $listener;
+        foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) {
+            $listener($event);
+
+            if (
+                in_array(StoppableEventInterface::class, class_implements($event))
+                && $event->isPropagationStopped()
+            ) {
+                break;
+            }
+        }
     }
 }

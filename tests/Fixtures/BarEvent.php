@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace TBoileau\Observer\Tests\Fixtures;
 
-class FooEvent
+use Psr\EventDispatcher\StoppableEventInterface;
+
+class BarEvent implements StoppableEventInterface
 {
     private string $test;
 
@@ -21,5 +23,10 @@ class FooEvent
     public function setTest(string $test): void
     {
         $this->test = $test;
+    }
+
+    public function isPropagationStopped(): bool
+    {
+        return true;
     }
 }
