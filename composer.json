@@ -1,0 +1,26 @@
+{
+    "name": "tboileau/observer",
+    "description": "PHP POO - Design Pattern - Observer",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TBoileau",
+            "email": "t-boileau@email.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "TBoileau\\Observer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TBoileau\\Observer\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
